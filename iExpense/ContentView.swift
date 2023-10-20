@@ -10,11 +10,15 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var expenses = Expenses()
     
+    @State private var showAddExpense = false
+    
     var body: some View {
         
         NavigationView {
             List {
-                ForEach (expenses.items, id: \.name) { item in
+                ///id is removed because the expense item struct
+                ///conforms to Identifiable and has an id variable(UUID)
+                ForEach (expenses.items) { item in
                     Text(item.name)
                 }
                 .onDelete(perform: removeItems)
@@ -22,11 +26,13 @@ struct ContentView: View {
             .navigationTitle("iExpense")
             .toolbar {
                 Button {
-                    let expense = ExpenseItem(name: "test \(expenses.items.count)", type: "personal", amount: 99)
-                    expenses.items.append(expense)
+                   showAddExpense = true
                 } label: {
                     Image(systemName: "plus")
                 }
+            }
+            .sheet(isPresented: $showAddExpense) {
+                AddView(expenses: expenses)
             }
 
         }

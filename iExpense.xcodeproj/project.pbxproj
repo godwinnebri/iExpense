@@ -13,6 +13,7 @@
 		CE9FAA2A2ADE8D87006F0E06 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE9FAA292ADE8D87006F0E06 /* Preview Assets.xcassets */; };
 		CED5C4B02AE1F28E00977A78 /* ExpenseItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5C4AF2AE1F28E00977A78 /* ExpenseItem.swift */; };
 		CED5C4B22AE1F34D00977A78 /* Expenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5C4B12AE1F34D00977A78 /* Expenses.swift */; };
+		CED5C4B42AE1FE6800977A78 /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5C4B32AE1FE6800977A78 /* AddView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		CE9FAA292ADE8D87006F0E06 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CED5C4AF2AE1F28E00977A78 /* ExpenseItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseItem.swift; sourceTree = "<group>"; };
 		CED5C4B12AE1F34D00977A78 /* Expenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expenses.swift; sourceTree = "<group>"; };
+		CED5C4B32AE1FE6800977A78 /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 			children = (
 				CE9FAA222ADE8D85006F0E06 /* iExpenseApp.swift */,
 				CE9FAA242ADE8D85006F0E06 /* ContentView.swift */,
+				CED5C4B32AE1FE6800977A78 /* AddView.swift */,
 				CED5C4AF2AE1F28E00977A78 /* ExpenseItem.swift */,
 				CED5C4B12AE1F34D00977A78 /* Expenses.swift */,
 				CE9FAA262ADE8D87006F0E06 /* Assets.xcassets */,
@@ -145,6 +148,7 @@
 			files = (
 				CED5C4B22AE1F34D00977A78 /* Expenses.swift in Sources */,
 				CE9FAA252ADE8D85006F0E06 /* ContentView.swift in Sources */,
+				CED5C4B42AE1FE6800977A78 /* AddView.swift in Sources */,
 				CED5C4B02AE1F28E00977A78 /* ExpenseItem.swift in Sources */,
 				CE9FAA232ADE8D85006F0E06 /* iExpenseApp.swift in Sources */,
 			);
