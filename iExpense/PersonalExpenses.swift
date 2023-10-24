@@ -1,25 +1,25 @@
 //
-//  Expenses.swift
+//  PersonalExpenses.swift
 //  iExpense
 //
-//  Created by Godwin IE on 20/10/2023.
+//  Created by Godwin IE on 24/10/2023.
 //
 
 import Foundation
 
-class Expenses : ObservableObject {
+class PersonalExpenses : ObservableObject {
     @Published var items = [ExpenseItem]() {
         didSet {
             let encoder = JSONEncoder()
             
             if let encoded = try? encoder.encode(items) {
-                UserDefaults.standard.set(encoded, forKey: "Items")
+                UserDefaults.standard.set(encoded, forKey: "PersonalItems")
             }
         }
     }
     
     init() {
-        if let savedItems = UserDefaults.standard.data(forKey: "Items") {
+        if let savedItems = UserDefaults.standard.data(forKey: "PersonalItems") {
             if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems) {
                 items = decodedItems
                 return
@@ -29,3 +29,4 @@ class Expenses : ObservableObject {
         items = []
     }
 }
+

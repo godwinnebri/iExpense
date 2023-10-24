@@ -8,20 +8,74 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var expenses = Expenses()
+    @StateObject var personalExpenses = PersonalExpenses()
+    @StateObject var businessExpenses = BusinessExpenses()
     
     @State private var showAddExpense = false
+    
+    let userCurrency : FloatingPointFormatStyle<Double>.Currency = .currency(code: Locale.current.currency?.identifier ?? "NGN")
     
     var body: some View {
         
         NavigationView {
             List {
-                ///id is removed because the expense item struct
-                ///conforms to Identifiable and has an id variable(UUID)
-                ForEach (expenses.items) { item in
-                    Text(item.name)
+                Section {
+                    DisclosureGroup ("Personal") {
+                        ///id is removed because the expense item struct
+                        ///conforms to Identifiable and has an id variable(UUID)\
+                        ForEach (personalExpenses.items) { item in
+                            HStack {
+                                VStack (alignment: .leading) {
+                                    Text(item.name)
+                                        .font(.headline)
+                                    Text(item.type)
+                                }
+                                
+                                Spacer()
+                                
+                                Text(item.amount, format: userCurrency)
+                                    .foregroundColor({
+                                        if item.amount <= 10 {
+                                            return Color.green
+                                        } else if item.amount <= 100 {
+                                            return Color.orange
+                                        } else {
+                                            return Color.red
+                                        }
+                                    }())
+                            }
+                        }
+                        .onDelete(perform: removePersonalItem)
+                    }
                 }
-                .onDelete(perform: removeItems)
+                
+                Section {
+                    DisclosureGroup ("Business") {
+                        ForEach (businessExpenses.items) { item in
+                            HStack {
+                                VStack (alignment: .leading) {
+                                    Text(item.name)
+                                        .font(.headline)
+                                    Text(item.type)
+                                }
+                                
+                                Spacer()
+                                
+                                Text(item.amount, format: userCurrency)
+                                    .foregroundColor({
+                                        if item.amount <= 10 {
+                                            return Color.green
+                                        } else if item.amount <= 100 {
+                                            return Color.orange
+                                        } else {
+                                            return Color.red
+                                        }
+                                    }())
+                            }
+                        }
+                        .onDelete(perform: removeBusinessItem)
+                    }
+                }
             } //list
             .navigationTitle("iExpense")
             .toolbar {
@@ -32,14 +86,18 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $showAddExpense) {
-                AddView(expenses: expenses)
+                AddView(personalExpense: personalExpenses, businessExpense: businessExpenses)
             }
 
         }
     }
     
-    func removeItems (at offset : IndexSet) {
-        expenses.items.remove(atOffsets: offset)
+    func removePersonalItem (at offset : IndexSet) {
+        personalExpenses.items.remove(atOffsets: offset)
+    }
+    
+    func removeBusinessItem (at offset : IndexSet) {
+        businessExpenses.items.remove(atOffsets: offset)
     }
 }
 

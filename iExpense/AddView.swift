@@ -8,13 +8,17 @@
 import SwiftUI
 
 struct AddView: View {
-    @ObservedObject var expenses : Expenses
+    @ObservedObject var personalExpense : PersonalExpenses
+    @ObservedObject var businessExpense : BusinessExpenses
     
     @State private var name = ""
     @State private var type = "Personal"
     @State private var amount = 0.0
     
-    let types = ["Business", "Personal", "School"]
+    let types = ["Business", "Personal"]
+    
+    /// to dismiss sheet
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationView {
@@ -34,7 +38,8 @@ struct AddView: View {
             .toolbar {
                 Button{
                     let expense = ExpenseItem(name: name, type: type, amount: amount)
-                    expenses.items.append(expense)
+                    type == "Personal" ? personalExpense.items.append(expense) : businessExpense.items.append(expense)
+                    dismiss()
                 } label: {
                     Text("Save")
                 }
@@ -45,6 +50,6 @@ struct AddView: View {
 
 struct AddView_Previews: PreviewProvider {
     static var previews: some View {
-        AddView(expenses: Expenses())
+        AddView(personalExpense: PersonalExpenses(), businessExpense: BusinessExpenses())
     }
 }
