@@ -13,11 +13,13 @@ struct ContentView: View {
     
     @State private var showAddExpense = false
     
+    
+    
     let userCurrency : FloatingPointFormatStyle<Double>.Currency = .currency(code: Locale.current.currency?.identifier ?? "NGN")
     
     var body: some View {
         
-        NavigationView {
+        NavigationStack {
             List {
                 Section {
                     DisclosureGroup ("Personal") {
@@ -79,15 +81,21 @@ struct ContentView: View {
             } //list
             .navigationTitle("iExpense")
             .toolbar {
-                Button {
-                   showAddExpense = true
+                
+                NavigationLink {
+                    AddView(personalExpense: personalExpenses, businessExpense: businessExpenses)
                 } label: {
                     Image(systemName: "plus")
                 }
+//                Button {
+//                   showAddExpense = true
+//                } label: {
+//                    Image(systemName: "plus")
+//                }
             }
-            .sheet(isPresented: $showAddExpense) {
-                AddView(personalExpense: personalExpenses, businessExpense: businessExpenses)
-            }
+//            .sheet(isPresented: $showAddExpense) {
+//                AddView(personalExpense: personalExpenses, businessExpense: businessExpenses)
+//            }
 
         }
     }

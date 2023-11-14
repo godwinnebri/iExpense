@@ -11,7 +11,7 @@ struct AddView: View {
     @ObservedObject var personalExpense : PersonalExpenses
     @ObservedObject var businessExpense : BusinessExpenses
     
-    @State private var name = ""
+    @State private var name = "Enter expense name"
     @State private var type = "Personal"
     @State private var amount = 0.0
     
@@ -23,7 +23,7 @@ struct AddView: View {
     var body: some View {
         NavigationView {
             Form {
-               TextField("Name", text: $name)
+              // TextField("Name", text: $name)
                 
                 Picker("Type", selection: $type) {
                     ForEach(types, id: \.self) {
@@ -34,7 +34,8 @@ struct AddView: View {
                 TextField("Amount", value: $amount, format: .currency(code: "USD"))
                     .keyboardType(.decimalPad)
             }
-            .navigationTitle("Add expense")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle($name)
             .toolbar {
                 Button{
                     let expense = ExpenseItem(name: name, type: type, amount: amount)
@@ -45,6 +46,8 @@ struct AddView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden()
+
     }
 }
 
