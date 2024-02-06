@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddView: View {
-    @ObservedObject var personalExpense : PersonalExpenses
-    @ObservedObject var businessExpense : BusinessExpenses
+    @Environment(\.modelContext) var modelContext
     
     @State private var name = "Enter expense name"
     @State private var type = "Personal"
@@ -17,7 +17,6 @@ struct AddView: View {
     
     let types = ["Business", "Personal"]
     
-    /// to dismiss sheet
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -39,7 +38,7 @@ struct AddView: View {
             .toolbar {
                 Button{
                     let expense = ExpenseItem(name: name, type: type, amount: amount)
-                    type == "Personal" ? personalExpense.items.append(expense) : businessExpense.items.append(expense)
+                    modelContext.insert(expense)
                     dismiss()
                 } label: {
                     Text("Save")
@@ -53,6 +52,6 @@ struct AddView: View {
 
 struct AddView_Previews: PreviewProvider {
     static var previews: some View {
-        AddView(personalExpense: PersonalExpenses(), businessExpense: BusinessExpenses())
+        AddView()
     }
 }

@@ -5,112 +5,103 @@
 //  Created by Godwin IE on 17/10/2023.
 //
 
+import SwiftData
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var personalExpenses = PersonalExpenses()
-    @StateObject var businessExpenses = BusinessExpenses()
+    @State private var type = "Business"
+    let types = ["Business", "Personal"]
+    
+    @Environment(\.modelContext) var modelContext
+    @Query(filter: #Predicate<ExpenseItem>{ expense in
+        
+        // this filter will only show you "Business" expenses
+        if expense.type == "Business" {
+            return true
+        } else {
+            return false
+        }
+        
+    },
+        sort: [
+        SortDescriptor(\ExpenseItem.name),
+        SortDescriptor(\ExpenseItem.amount)
+    ]) var expenses : [ExpenseItem]
     
     @State private var showAddExpense = false
     
-    
-    
     let userCurrency : FloatingPointFormatStyle<Double>.Currency = .currency(code: Locale.current.currency?.identifier ?? "NGN")
-    
+
     var body: some View {
         
         NavigationStack {
             List {
-                Section {
-                    DisclosureGroup ("Personal") {
-                        ///id is removed because the expense item struct
-                        ///conforms to Identifiable and has an id variable(UUID)\
-                        ForEach (personalExpenses.items) { item in
-                            HStack {
-                                VStack (alignment: .leading) {
-                                    Text(item.name)
-                                        .font(.headline)
-                                    Text(item.type)
-                                }
-                                
-                                Spacer()
-                                
-                                Text(item.amount, format: userCurrency)
-                                    .foregroundColor({
-                                        if item.amount <= 10 {
-                                            return Color.green
-                                        } else if item.amount <= 100 {
-                                            return Color.orange
-                                        } else {
-                                            return Color.red
-                                        }
-                                    }())
-                            }
-                        }
-                        .onDelete(perform: removePersonalItem)
-                    }
-                }
                 
-                Section {
-                    DisclosureGroup ("Business") {
-                        ForEach (businessExpenses.items) { item in
-                            HStack {
-                                VStack (alignment: .leading) {
-                                    Text(item.name)
-                                        .font(.headline)
-                                    Text(item.type)
-                                }
-                                
-                                Spacer()
-                                
-                                Text(item.amount, format: userCurrency)
-                                    .foregroundColor({
-                                        if item.amount <= 10 {
-                                            return Color.green
-                                        } else if item.amount <= 100 {
-                                            return Color.orange
-                                        } else {
-                                            return Color.red
-                                        }
-                                    }())
-                            }
-                        }
-                        .onDelete(perform: removeBusinessItem)
+                // this filter does not work because
+                // i have not found a way to make predicate filtering work dynamically
+                Picker("Filter by", selection: $type) {
+                    ForEach(types, id: \.self) {
+                        Text($0)
                     }
                 }
+                    
+                    ForEach (expenses) { expense in
+                        HStack {
+                            VStack (alignment: .leading) {
+                                Text(expense.name)
+                                    .font(.headline)
+                                Text(expense.type)
+                            }
+                            
+                            Spacer()
+                            
+                            Text(expense.amount, format: userCurrency)
+                                .foregroundColor({
+                                    if expense.amount <= 10 {
+                                        return Color.green
+                                    } else if expense.amount <= 100 {
+                                        return Color.orange
+                                    } else {
+                                        return Color.red
+                                    }
+                                }())
+                        }
+                    }
+                    .onDelete(perform: removeExpense)
+                                    
             } //list
             .navigationTitle("iExpense")
             .toolbar {
                 
-                NavigationLink {
-                    AddView(personalExpense: personalExpenses, businessExpense: businessExpenses)
+                Button {
+                    showAddExpense = true
                 } label: {
                     Image(systemName: "plus")
                 }
-//                Button {
-//                   showAddExpense = true
-//                } label: {
-//                    Image(systemName: "plus")
-//                }
+                
+                .sheet(isPresented: $showAddExpense) {
+                    AddView()
+                }
+                
             }
-//            .sheet(isPresented: $showAddExpense) {
-//                AddView(personalExpense: personalExpenses, businessExpense: businessExpenses)
-//            }
+            
+            } //nav stack
+        }
+        
+        func removeExpense(at offsets: IndexSet) {
+            for index in offsets {
+                let expense = expenses[index]
+                modelContext.delete(expense)
+            }
+        }
 
+        
+    }
+
+    
+    struct ContentView_Previews: PreviewProvider {
+        static var previews: some View {
+            ContentView()
         }
     }
-    
-    func removePersonalItem (at offset : IndexSet) {
-        personalExpenses.items.remove(atOffsets: offset)
-    }
-    
-    func removeBusinessItem (at offset : IndexSet) {
-        businessExpenses.items.remove(atOffsets: offset)
-    }
-}
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
